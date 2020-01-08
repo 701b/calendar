@@ -17,7 +17,7 @@ public class CalendarView extends LinearLayout {
     private final int MAX_NUMBER_OF_ROW = 6;
     private final int MAX_NUMBER_OF_DAY_IN_A_ROW = 7;
 
-    private ArrayList<Day> days;
+    private Calendar calendar;
     private ArrayList<DayView> dayViews;
 
     public CalendarView(Context context) {
@@ -50,6 +50,7 @@ public class CalendarView extends LinearLayout {
         inflater.inflate(R.layout.calendar_view, this);
         setOrientation(LinearLayout.VERTICAL);
         dayViews = new ArrayList<>();
+        calendar = new Calendar();
     }
 
     @Override

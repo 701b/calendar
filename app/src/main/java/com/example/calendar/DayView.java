@@ -1,6 +1,7 @@
 package com.example.calendar;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ public class DayView extends LinearLayout {
     private Day day;
 
     private TextView dayText;
+    private Schedule[] schedules;
     private ArrayList<TextView> scheduleTexts;
 
     public DayView(Context context) {
@@ -52,7 +54,9 @@ public class DayView extends LinearLayout {
         this.setLayoutParams(layoutParams);
         inflater.inflate(R.layout.day_view, this);
         setOrientation(LinearLayout.VERTICAL);
+
         scheduleTexts = new ArrayList<>();
+        schedules = new Schedule[MAX_NUMBER_OF_SCHEDULE];
 
         dayText = findViewById(R.id.day_text);
         scheduleTexts.add((TextView) findViewById(R.id.schedule_text1));
@@ -64,32 +68,62 @@ public class DayView extends LinearLayout {
     public void setDay(Day day, boolean isInMonth) {
         this.day = day;
 
-        renew(isInMonth);
-    }
-
-    private void renew(boolean isInMonth) {
         dayText.setText(String.valueOf(day.getDay()));
 
-        for (int i = 0; i < MAX_NUMBER_OF_SCHEDULE; i++) {
-            Schedule schedule = day.getScheduleAt(i);
-
-            if (schedule != null) {
-                scheduleTexts.get(i).setText(schedule.getTitle());
-            } else {
-                scheduleTexts.get(i).setText("");
-            }
-
-            if (isInMonth) {
-                scheduleTexts.get(i).setTextColor(Color.BLACK);
-            } else {
-                scheduleTexts.get(i).setTextColor(Color.GRAY);
-            }
-        }
-
+        // 날짜가 해당 월의 날짜인 경우 검은색으로 날짜 표기, 그 외에는 회색
         if (isInMonth) {
             dayText.setTextColor(Color.BLACK);
         } else {
             dayText.setTextColor(Color.GRAY);
+        }
+
+        // 스케줄이 들어가는 부분을 초기화
+        for (int i = 0; i < MAX_NUMBER_OF_SCHEDULE; i++) {
+            scheduleTexts.get(i).setText("");
+            scheduleTexts.get(i).setBackgroundColor(Color.WHITE);
+        }
+    }
+
+    public int setSchedule(Schedule schedule, boolean isFirst) throws NoSpaceAvailableException {
+        for (int index = 0; index < MAX_NUMBER_OF_SCHEDULE; index++) {
+            if (schedules[index] == null) {
+                schedules[index] = schedule;
+                renewSchedule(schedule, isFirst, index);
+                return index;
+            }
+        }
+
+        throw new NoSpaceAvailableException();
+    }
+
+    public void setSchedule(Schedule schedule, boolean isFirst, int index) {
+        if (schedules[index] != null) {
+            throw new AlreadyScheduleExistedException();
+        }
+
+        schedules[index] = schedule;
+        renewSchedule(schedule, isFirst, index);
+    }
+
+    private void renewSchedule(Schedule schedule, boolean isFirst, int index) {
+        TextView scheduleText = scheduleTexts.get(index);
+
+        if (isFirst) {
+            scheduleText.setText(schedule.getTitle());
+        }
+
+        scheduleText.setBackgroundColor(schedule.getColor().toArgb());
+    }
+
+    public class NoSpaceAvailableException extends Exception {
+        public NoSpaceAvailableException() {
+            super("There is no space avaliable to put schedule text.");
+        }
+    }
+
+    public class AlreadyScheduleExistedException extends RuntimeException {
+        public AlreadyScheduleExistedException() {
+            super("There is already scehdule. Can not put schedule.");
         }
     }
 }

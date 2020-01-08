@@ -3,6 +3,8 @@ package com.example.calendar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -26,5 +28,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         calendarView.setDays(days, 1);
+
+        Month month = new Month(2020, 1);
+
+        Toast.makeText(this, String.valueOf(month.getLocalDate().getDayOfWeek().getValue()), Toast.LENGTH_SHORT).show();
     }
 }
