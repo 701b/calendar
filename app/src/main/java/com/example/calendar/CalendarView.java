@@ -2,23 +2,34 @@ package com.example.calendar;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.GetChars;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.DragEvent;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class CalendarView extends LinearLayout {
 
-    private final int MAX_NUMBER_OF_ROW = 6;
-    private final int MAX_NUMBER_OF_DAY_IN_A_ROW = 7;
+    private final int defaultValueOfPage = 50000;
 
-    private Calendar calendar;
-    private ArrayList<DayView> dayViews;
+    private ArrayList<Schedule> schedules;
+    private LocalDate defaultDate;
+
+    private CalendarViewPagerAdapter calendarViewPagerAdapter;
+
+    private TextView monthText;
 
     public CalendarView(Context context) {
         super(context);
@@ -45,51 +56,47 @@ public class CalendarView extends LinearLayout {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(getContext().LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         inflater.inflate(R.layout.calendar_view, this);
         setOrientation(LinearLayout.VERTICAL);
-        dayViews = new ArrayList<>();
-        calendar = new Calendar();
+
+        defaultDate = LocalDate.now();
+        defaultDate = defaultDate.minusDays(defaultDate.getDayOfMonth() - 1);
+
+        schedules = new ArrayList<>();
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        for (int i = 0; i < MAX_NUMBER_OF_ROW; i++) {
-            LinearLayout layout = new LinearLayout(getContext());
-            LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        ViewPager viewPager = findViewById(R.id.calendar_pager);
+        monthText = findViewById(R.id.month_text);
 
-            layoutParams.weight = 1;
-            layout.setOrientation(LinearLayout.HORIZONTAL);
-            layout.setLayoutParams(layoutParams);
-            addView(layout);
+        calendarViewPagerAdapter = new CalendarViewPagerAdapter(getContext(), schedules, defaultDate, defaultValueOfPage);
+        viewPager.setAdapter(calendarViewPagerAdapter);
+        viewPager.setCurrentItem(defaultValueOfPage);
 
-            for (int j = 0; j < MAX_NUMBER_OF_DAY_IN_A_ROW; j++) {
-                DayView dayView = new DayView(getContext());
-                LayoutParams dayViewLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        monthText.setText(defaultDate.getYear() + "년 " + defaultDate.getMonthValue() + "월");
 
-                dayViewLayoutParams.weight = 1;
-                dayView.setLayoutParams(dayViewLayoutParams);
-                layout.addView(dayView);
-                dayViews.add(dayView);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
             }
-        }
-    }
 
-    public void setDays(ArrayList<Day> days, int month) {
-        this.days = days;
+            @Override
+            public void onPageSelected(int position) {
+                LocalDate currentMonth = defaultDate.plusMonths(position - defaultValueOfPage);
 
-        renew(month);
-    }
+                monthText.setText(currentMonth.getYear() + "년 " + currentMonth.getMonthValue() + "월");
+            }
 
-    private void renew(int month) {
-        for (int i = 0; i < MAX_NUMBER_OF_DAY_IN_A_ROW * MAX_NUMBER_OF_ROW; i++) {
-            Day day = days.get(i);
-            DayView dayView = dayViews.get(i);
+            @Override
+            public void onPageScrollStateChanged(int state) {
 
-            dayView.setDay(day, day.getMonth() == month);
-        }
+            }
+        });
     }
 }

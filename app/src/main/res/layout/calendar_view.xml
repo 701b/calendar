@@ -4,12 +4,22 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/month_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="month"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"/>
+
     <LinearLayout
         android:id="@+id/weeksday"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/holo_orange_light"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -81,5 +91,10 @@
             android:textSize="18sp" />
 
     </LinearLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/calendar_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </merge>

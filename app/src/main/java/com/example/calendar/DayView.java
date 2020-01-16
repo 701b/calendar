@@ -10,14 +10,14 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class DayView extends LinearLayout {
 
     private final int MAX_NUMBER_OF_SCHEDULE = 4;
 
-    private Day day;
-
+    private LocalDate date;
     private TextView dayText;
     private Schedule[] schedules;
     private ArrayList<TextView> scheduleTexts;
@@ -65,10 +65,10 @@ public class DayView extends LinearLayout {
         scheduleTexts.add((TextView) findViewById(R.id.schedule_text4));
     }
 
-    public void setDay(Day day, boolean isInMonth) {
-        this.day = day;
+    public void setDay(LocalDate date, boolean isInMonth) {
+        this.date = date;
 
-        dayText.setText(String.valueOf(day.getDay()));
+        dayText.setText(String.valueOf(date.getDayOfMonth()));
 
         // 날짜가 해당 월의 날짜인 경우 검은색으로 날짜 표기, 그 외에는 회색
         if (isInMonth) {

@@ -2,6 +2,7 @@ package com.example.calendar;
 
 import android.graphics.Color;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Schedule {
@@ -18,6 +19,29 @@ public class Schedule {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+
+    public boolean isAtDate(LocalDate localDate) {
+        LocalDate startDate = startDateTime.toLocalDate();
+        LocalDate endDate = endDateTime.toLocalDate();
+
+        if (localDate.compareTo(startDate) > 0 && localDate.compareTo(endDate) < 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean isInMonth(LocalDate monthDate) {
+        LocalDate startDate = startDateTime.toLocalDate();
+        LocalDate endDate = endDateTime.toLocalDate();
+
+        if (startDate.getMonthValue() == monthDate.getMonthValue()) {
+            return true;
+        }
+
+        return false;
     }
 
     public String getTitle() {
