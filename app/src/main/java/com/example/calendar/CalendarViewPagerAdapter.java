@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class CalendarViewPagerAdapter extends PagerAdapter {
@@ -43,7 +45,7 @@ public class CalendarViewPagerAdapter extends PagerAdapter {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
             layoutParams.weight = 1;
-            layoutParams.setMargins((int) (20 * context.getResources().getDisplayMetrics().density), 0, (int) (20 * context.getResources().getDisplayMetrics().density), 0);
+            layoutParams.setMargins((int) (10 * context.getResources().getDisplayMetrics().density), 0, (int) (10 * context.getResources().getDisplayMetrics().density), 0);
             layout.setOrientation(LinearLayout.HORIZONTAL);
             layout.setLayoutParams(layoutParams);
             parentLayout.addView(layout);
@@ -68,11 +70,14 @@ public class CalendarViewPagerAdapter extends PagerAdapter {
         final int numberOfDayInMonthToShow = monthToShow.lengthOfMonth();
         final int numberOfDayInFrontMonth = monthToShow.plusDays(1).getDayOfWeek().getValue() - 1;
         final int numberOfDayInRearMonth = MAX_NUMBER_OF_DAY_IN_A_ROW * MAX_NUMBER_OF_ROW - monthToShow.lengthOfMonth() - numberOfDayInFrontMonth;
+        LocalDate startDateInCalendar = monthToShow.plusDays(-numberOfDayInFrontMonth);
+        LocalDate endDateInCalendar = rearMonth.plusDays(numberOfDayInRearMonth - 1);
         ArrayList<Schedule> schedulesInMonth = new ArrayList<>();
         int count = 0;
 
+        // 현재 달에 포함되는 스케줄 찾기
         for (Schedule schedule : schedules) {
-            if (schedule.isInMonth(monthToShow)) {
+            if (schedule.isInPeriod(startDateInCalendar, endDateInCalendar)) {
                 schedulesInMonth.add(schedule);
             }
         }
@@ -103,23 +108,28 @@ public class CalendarViewPagerAdapter extends PagerAdapter {
         for (Schedule schedule : schedulesInMonth) {
             LocalDate startDate = schedule.getStartDateTime().toLocalDate();
             LocalDate endDate = schedule.getEndDateTime().toLocalDate();
-            DayView dayView = dayViews.get(numberOfDayInFrontMonth + startDate.getDayOfMonth() - 1);
+            int numberOfDayToShow = (int) ChronoUnit.DAYS.between(startDate, endDate);
+            int indexOfDayView = (int) ChronoUnit.DAYS.between(startDateInCalendar, startDate);
+            DayView dayView;
+
+            if (indexOfDayView < 0) {
+                numberOfDayToShow += indexOfDayView;
+                indexOfDayView = 0;
+            }
+
+            dayView = dayViews.get(indexOfDayView++);
 
             try {
                 int index = dayView.setSchedule(schedule, true);
 
-                if (startDate.getMonthValue() == endDate.getMonthValue()) {
-                    for (int i = numberOfDayInFrontMonth + startDate.getDayOfMonth(); i <= numberOfDayInFrontMonth + endDate.getDayOfMonth(); i++) {
-                        dayView = dayViews.get(i);
-                        dayView.setSchedule(schedule, false, index);
+                for (int i = 1; i <= numberOfDayToShow; i++, indexOfDayView++) {
+                    if (indexOfDayView >= MAX_NUMBER_OF_DAY_IN_A_ROW * MAX_NUMBER_OF_ROW) {
+                        break;
                     }
-                } else {
-                    for (int i = numberOfDayInFrontMonth + startDate.getDayOfMonth(); i <= numberOfDayInFrontMonth + startDate.lengthOfMonth() - startDate.getDayOfMonth() + endDate.getDayOfMonth(); i++) {
-                        dayView = dayViews.get(i);
-                        dayView.setSchedule(schedule, false, index);
-                    }
-                }
 
+                    dayView = dayViews.get(indexOfDayView);
+                    dayView.setSchedule(schedule, false, index);
+                }
             } catch (DayView.NoSpaceAvailableException e) {
 
             }
