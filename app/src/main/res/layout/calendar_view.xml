@@ -112,6 +112,7 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/calendar_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@android:color/background_light" />
 
 </merge>

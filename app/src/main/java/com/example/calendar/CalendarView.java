@@ -189,7 +189,7 @@ public class CalendarView extends LinearLayout {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 dateTime.year = year;
-                dateTime.month = month;
+                dateTime.month = month + 1;
                 dateTime.dayOfMonth = dayOfMonth;
 
                 TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
@@ -205,7 +205,7 @@ public class CalendarView extends LinearLayout {
                 timePickerDialog.setMessage("시간 선택");
                 timePickerDialog.show();
             }
-        }, dateTime.year, dateTime.month, dateTime.dayOfMonth);
+        }, dateTime.year, dateTime.month - 1, dateTime.dayOfMonth);
 
         datePickerDialog.setMessage("날짜 선택");
         datePickerDialog.show();

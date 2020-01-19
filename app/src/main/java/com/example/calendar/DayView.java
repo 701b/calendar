@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -80,15 +81,15 @@ public class DayView extends LinearLayout {
         // 스케줄이 들어가는 부분을 초기화
         for (int i = 0; i < MAX_NUMBER_OF_SCHEDULE; i++) {
             scheduleTexts.get(i).setText("");
-            scheduleTexts.get(i).setBackgroundColor(Color.WHITE);
+            //scheduleTexts.get(i).setBackgroundColor(Color.WHITE);
         }
     }
 
-    public int setSchedule(Schedule schedule, boolean isFirst) throws NoSpaceAvailableException {
+    public int setSchedule(Schedule schedule, boolean isFirst, boolean isLast) throws NoSpaceAvailableException {
         for (int index = 0; index < MAX_NUMBER_OF_SCHEDULE; index++) {
             if (schedules[index] == null) {
                 schedules[index] = schedule;
-                renewSchedule(schedule, isFirst, index);
+                renewSchedule(schedule, true, isFirst, isLast, index);
                 return index;
             }
         }
@@ -96,23 +97,36 @@ public class DayView extends LinearLayout {
         throw new NoSpaceAvailableException();
     }
 
-    public void setSchedule(Schedule schedule, boolean isFirst, int index) {
+    public void setSchedule(Schedule schedule, int index, boolean isFirst, boolean isLast) {
         if (schedules[index] != null) {
             throw new AlreadyScheduleExistedException();
         }
 
         schedules[index] = schedule;
-        renewSchedule(schedule, isFirst, index);
+        renewSchedule(schedule, false, isFirst, isLast, index);
     }
 
-    private void renewSchedule(Schedule schedule, boolean isFirst, int index) {
+    private void renewSchedule(Schedule schedule, boolean isText, boolean isFirst, boolean isLast, int index) {
         TextView scheduleText = scheduleTexts.get(index);
+        LayoutParams layoutParams = (LayoutParams) scheduleText.getLayoutParams();
 
-        if (isFirst) {
+        if (isText) {
             scheduleText.setText(schedule.getTitle());
         }
 
-        scheduleText.setBackgroundColor(schedule.getColor().toArgb());
+        if (isFirst && isLast) {
+            scheduleText.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.schedule_shape_both_sides));
+            layoutParams.leftMargin = 10;
+            layoutParams.rightMargin = 10;
+        } else if (isFirst) {
+            scheduleText.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.schedule_shape_left));
+            layoutParams.leftMargin = 10;
+        } else if (isLast) {
+            scheduleText.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.schedule_shape_right));
+            layoutParams.rightMargin = 10;
+        } else {
+            scheduleText.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.schedule_shape_middle));
+        }
     }
 
     public class NoSpaceAvailableException extends Exception {

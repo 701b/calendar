@@ -15,9 +15,11 @@
         android:id="@+id/schedule_text1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="2dp"
         android:layout_weight="1"
         android:ellipsize="end"
         android:maxLines="1"
+        android:paddingLeft="5dp"
         android:text="schedule1"
         android:textColor="@android:color/black" />
 
@@ -25,9 +27,11 @@
         android:id="@+id/schedule_text2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="2dp"
         android:layout_weight="1"
         android:ellipsize="end"
         android:maxLines="1"
+        android:paddingLeft="5dp"
         android:text="schedule2"
         android:textColor="@android:color/black" />
 
@@ -35,9 +39,11 @@
         android:id="@+id/schedule_text3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="2dp"
         android:layout_weight="1"
         android:ellipsize="end"
         android:maxLines="1"
+        android:paddingLeft="5dp"
         android:text="schedule3"
         android:textColor="@android:color/black" />
 
@@ -45,9 +51,11 @@
         android:id="@+id/schedule_text4"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="2dp"
         android:layout_weight="1"
         android:ellipsize="end"
         android:maxLines="1"
+        android:paddingLeft="5dp"
         android:text="schedule4"
         android:textColor="@android:color/black" />
 

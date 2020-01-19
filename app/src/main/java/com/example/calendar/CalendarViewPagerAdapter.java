@@ -106,27 +106,41 @@ public class CalendarViewPagerAdapter extends PagerAdapter {
         for (Schedule schedule : schedulesInMonth) {
             LocalDate startDate = schedule.getStartDateTime().toLocalDate();
             LocalDate endDate = schedule.getEndDateTime().toLocalDate();
-            int numberOfDayToShow = (int) ChronoUnit.DAYS.between(startDate, endDate);
+            int numberOfDayToShow = (int) ChronoUnit.DAYS.between(startDate, endDate) + 1;
             int indexOfDayView = (int) ChronoUnit.DAYS.between(startDateInCalendar, startDate);
             DayView dayView;
+            boolean isFirst = true;
 
             if (indexOfDayView < 0) {
                 numberOfDayToShow += indexOfDayView;
                 indexOfDayView = 0;
+                isFirst = false;
             }
 
             dayView = dayViews.get(indexOfDayView++);
 
             try {
-                int index = dayView.setSchedule(schedule, true);
+                int index;
 
-                for (int i = 1; i <= numberOfDayToShow; i++, indexOfDayView++) {
+                if (numberOfDayToShow == 1) {
+                    index = dayView.setSchedule(schedule, isFirst, true);
+                } else {
+                    index = dayView.setSchedule(schedule, isFirst, false);
+                }
+
+                for (int i = 1; i < numberOfDayToShow; i++, indexOfDayView++) {
                     if (indexOfDayView >= MAX_NUMBER_OF_DAY_IN_A_ROW * MAX_NUMBER_OF_ROW) {
                         break;
                     }
 
                     dayView = dayViews.get(indexOfDayView);
-                    dayView.setSchedule(schedule, false, index);
+
+                    if (i == numberOfDayToShow - 1) {
+                        dayView.setSchedule(schedule, index, false, true);
+                        break;
+                    } else {
+                        dayView.setSchedule(schedule, index, false, false);
+                    }
                 }
             } catch (DayView.NoSpaceAvailableException e) {
 

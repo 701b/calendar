@@ -8,19 +8,18 @@ import java.time.LocalDateTime;
 
 public class Schedule {
 
-    private final Color defaultColor = Color.valueOf(1f, 0.5f, 0.5f);
-
     private String title;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private String memo = "";
-    private Color color = null;
+    private Color color;
 
 
     public Schedule(String title, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         this.title = title;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
+        color = Color.valueOf(1f, 0.5f, 0.5f);
     }
 
     public boolean isAtDate(LocalDate localDate) {
@@ -44,11 +43,7 @@ public class Schedule {
     }
 
     public Color getColor() {
-        if (color == null) {
-            return defaultColor;
-        } else {
-            return color;
-        }
+        return color;
     }
 
     public void setColor(Color color) {
