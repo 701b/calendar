@@ -139,6 +139,11 @@ public class CalendarViewPagerAdapter extends PagerAdapter {
     }
 
     @Override
+    public int getItemPosition(@NonNull Object object) {
+        return POSITION_NONE;
+    }
+
+    @Override
     public int getCount() {
         return 100000;
     }
