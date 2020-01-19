@@ -1,7 +1,6 @@
 package com.example.calendar;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
@@ -24,11 +22,11 @@ public class CalendarViewPagerAdapter extends PagerAdapter {
     private final LocalDate defaultDate;
 
     private Context context;
-    private ArrayList<Schedule> schedules;
+    private ScheduleDBHelper scheduleDBHelper;
 
-    public CalendarViewPagerAdapter(Context context, ArrayList<Schedule> schedules, LocalDate defaultDate, int defaultValueOfPage) {
+    public CalendarViewPagerAdapter(Context context, ScheduleDBHelper scheduleDBHelper, LocalDate defaultDate, int defaultValueOfPage) {
         this.context = context;
-        this.schedules = schedules;
+        this.scheduleDBHelper = scheduleDBHelper;
         this.defaultDate = defaultDate;
         this.defaultValueOfPage = defaultValueOfPage;
     }
@@ -76,7 +74,7 @@ public class CalendarViewPagerAdapter extends PagerAdapter {
         int count = 0;
 
         // 현재 달에 포함되는 스케줄 찾기
-        for (Schedule schedule : schedules) {
+        for (Schedule schedule : scheduleDBHelper.getSchedules()) {
             if (schedule.isInPeriod(startDateInCalendar, endDateInCalendar)) {
                 schedulesInMonth.add(schedule);
             }

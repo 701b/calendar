@@ -40,7 +40,7 @@ public class CalendarView extends LinearLayout {
 
     private final int marginPixelBetweenPage = 50;
 
-    private ArrayList<Schedule> schedules;
+    private ScheduleDBHelper scheduleDBHelper;
     private LocalDate defaultDate;
 
     private CalendarViewPagerAdapter calendarViewPagerAdapter;
@@ -81,7 +81,7 @@ public class CalendarView extends LinearLayout {
         defaultDate = LocalDate.now();
         defaultDate = defaultDate.minusDays(defaultDate.getDayOfMonth() - 1);
 
-        schedules = new ArrayList<>();
+        scheduleDBHelper = new ScheduleDBHelper(getContext(), "ScheduleBook.db", null, 1);
     }
 
     @Override
@@ -157,7 +157,7 @@ public class CalendarView extends LinearLayout {
             }
         });
 
-        calendarViewPagerAdapter = new CalendarViewPagerAdapter(getContext(), schedules, defaultDate, defaultValueOfPage);
+        calendarViewPagerAdapter = new CalendarViewPagerAdapter(getContext(), scheduleDBHelper, defaultDate, defaultValueOfPage);
         viewPager.setAdapter(calendarViewPagerAdapter);
         viewPager.setCurrentItem(defaultValueOfPage);
         viewPager.setPageMargin(marginPixelBetweenPage);
@@ -212,22 +212,9 @@ public class CalendarView extends LinearLayout {
     }
 
     public void addSchedule(Schedule schedule) {
-        schedules.add(schedule);
-        sortSchedules();
+        scheduleDBHelper.addSchedule(schedule);
         calendarViewPagerAdapter.notifyDataSetChanged();
     }
-
-    private void sortSchedules() {
-        Comparator<Schedule> comparator = new Comparator<Schedule>() {
-            @Override
-            public int compare(Schedule o1, Schedule o2) {
-                return o1.getStartDateTime().compareTo(o2.getStartDateTime());
-            }
-        };
-
-        schedules.sort(comparator);
-    }
-
 
     class DateTime {
 

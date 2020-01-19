@@ -10,10 +10,10 @@ public class Schedule {
 
     private final Color defaultColor = Color.valueOf(1f, 0.5f, 0.5f);
 
-    private String title = null;
-    private LocalDateTime startDateTime = null;
-    private LocalDateTime endDateTime = null;
-    private String memo = null;
+    private String title;
+    private LocalDateTime startDateTime;
+    private LocalDateTime endDateTime;
+    private String memo = "";
     private Color color = null;
 
 
