@@ -33,12 +33,22 @@ public class ScheduleDBHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE SCHEDULEBOOK (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, startDateTime TEXT, endDateTime TEXT, memo TEXT);");
     }
 
+    /**
+     * schedule 정보를 ArrayList에 저장함과 동시에 DB에도 저장한다. 이 때, ArrayList는 한 번 정렬된다.
+     *
+     * @param schedule 저장할 schedule
+     */
     public void addSchedule(Schedule schedule) {
         schedules.add(schedule);
         sortSchedules();
         insert(schedule);
     }
 
+    /**
+     * 인자로 받은 schedule을 ArrayList에서 지움과 동시에 DB에서도 삭제한다.
+     *
+     * @param schedule 지울 schedule
+     */
     public void removeSchedule(Schedule schedule) {
         schedules.remove(schedule);
         delete(schedule);

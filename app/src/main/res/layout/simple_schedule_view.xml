@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_in_simple_schedule_view"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="20sp"
+        android:layout_height="match_parent"
+        app:srcCompat="@drawable/dot" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp">
+
+        <TextView
+            android:id="@+id/schedule_text_in_simple_schedule_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="샘플 스케줄"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/schedule_time_text_in_simple_schedule_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="오전 08:00 ~ 오후 2:00" />
+    </LinearLayout>
+
+</LinearLayout>
